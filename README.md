@@ -41,9 +41,11 @@ The system consists of the following components:
 ![Dashboard](images/Dashboard.png)
 
 - **Health Monitoring**
+
 ![Health Monitoring](images/Health_Monitoring.png)
 
 - **Safety Monitoring**
+
 ![Safety Monitoring](images/Safety_Monitoring.png)
 
 - **Reminders**
