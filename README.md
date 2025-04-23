@@ -34,6 +34,26 @@ The system consists of the following components:
 - **Coordinator Agent**: Manages communication between agents and coordinates system-wide decisions.
 - **Web Application**: Flask-based web interface for monitoring and interacting with the system.
 
+## Screenshots
+
+- **Dashboard**
+
+![Dashboard](images/Dashboard.png)
+
+- **Health Monitoring**
+![Health Monitoring](docs/images/Health_Monitoring.png)
+
+- **Safety Monitoring**
+![Safety Monitoring](docs/images/Safety_Monitoring.png)
+
+- **Reminders**
+
+![Reminders](images/Reminders.png)
+
+- **Settings**
+
+![Settings](images/Settings.png)
+
 ## Requirements
 
 - Python 3.8+
