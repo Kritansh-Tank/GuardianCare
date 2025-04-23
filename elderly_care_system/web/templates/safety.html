@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ app_name }} - Safety Monitoring</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
+          <div class="position-sticky pt-3">
+            <div class="text-center mb-4">
+              <h2 class="text-white">{{ app_name }}</h2>
+              <p class="text-muted">Safety Monitoring</p>
+            </div>
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link" href="/">
+                  <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/health">
+                  <i class="bi bi-heart-pulse me-2"></i> Health Monitoring
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="/safety">
+                  <i class="bi bi-shield-check me-2"></i> Safety Monitoring
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/reminders">
+                  <i class="bi bi-alarm me-2"></i> Reminders
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/settings">
+                  <i class="bi bi-gear me-2"></i> Settings
+                </a>
+              </li>
+            </ul>
+
+            <hr class="text-white" />
+          </div>
+        </div>
+
+        <!-- Main content -->
+        <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+          <div
+            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+          >
+            <h1 class="h2">Safety Monitoring</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+              <div class="btn-group me-2">
+                <button
+                  id="system-status"
+                  class="btn btn-sm btn-outline-secondary"
+                >
+                  <span class="status-indicator"></span> System Status
+                </button>
+              </div>
+              <button
+                id="refreshSafetyBtn"
+                class="btn btn-sm btn-outline-primary"
+              >
+                <i class="bi bi-arrow-clockwise"></i> Refresh Data
+              </button>
+            </div>
+          </div>
+
+          <!-- Current Status -->
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="card border-primary mb-4">
+                <div class="card-header bg-primary text-white">
+                  <i class="bi bi-house-door me-2"></i> Current Status
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <div class="card h-100 bg-light">
+                        <div class="card-body text-center">
+                          <h5 class="card-title">Current Location</h5>
+                          <h2 id="current-location" class="display-6">
+                            Unknown
+                          </h2>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <div class="card h-100 bg-light">
+                        <div class="card-body text-center">
+                          <h5 class="card-title">Last Movement</h5>
+                          <h2 id="last-movement" class="display-6">Unknown</h2>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-md-6 mb-3">
+                      <div class="card h-100 bg-light">
+                        <div class="card-body text-center">
+                          <h5 class="card-title">Movement Status</h5>
+                          <h2 id="movement-status" class="display-6">
+                            <span class="badge bg-secondary">Unknown</span>
+                          </h2>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <div class="card h-100 bg-light">
+                        <div class="card-body text-center">
+                          <h5 class="card-title">Door Status</h5>
+                          <h2 id="door-status" class="display-6">
+                            <span class="badge bg-secondary">Unknown</span>
+                          </h2>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card border-info mb-4">
+                <div class="card-header bg-info text-white">
+                  <i class="bi bi-activity me-2"></i> Movement Activity Heat Map
+                </div>
+                <div class="card-body">
+                  <div class="mb-3 text-center">
+                    <div
+                      class="btn-group btn-group-sm"
+                      role="group"
+                      aria-label="Time period"
+                    >
+                      <button
+                        type="button"
+                        class="btn btn-outline-primary active"
+                        id="todayBtn"
+                      >
+                        Today
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-outline-primary"
+                        id="weekBtn"
+                      >
+                        This Week
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-outline-primary"
+                        id="monthBtn"
+                      >
+                        This Month
+                      </button>
+                    </div>
+                  </div>
+                  <div id="activity-heatmap" class="heatmap-container">
+                    <!-- Activity heatmap will be rendered here -->
+                    <div class="row g-0">
+                      <div class="col-4 p-1">
+                        <div class="location-tile bedroom">
+                          <h5>Bedroom</h5>
+                          <div class="activity-indicator" id="bedroom-activity">
+                            <div
+                              class="activity-level"
+                              style="height: 20%"
+                            ></div>
+                          </div>
+                          <small id="bedroom-time">0 hrs</small>
+                        </div>
+                      </div>
+                      <div class="col-4 p-1">
+                        <div class="location-tile bathroom">
+                          <h5>Bathroom</h5>
+                          <div
+                            class="activity-indicator"
+                            id="bathroom-activity"
+                          >
+                            <div
+                              class="activity-level"
+                              style="height: 30%"
+                            ></div>
+                          </div>
+                          <small id="bathroom-time">0 hrs</small>
+                        </div>
+                      </div>
+                      <div class="col-4 p-1">
+                        <div class="location-tile kitchen">
+                          <h5>Kitchen</h5>
+                          <div class="activity-indicator" id="kitchen-activity">
+                            <div
+                              class="activity-level"
+                              style="height: 50%"
+                            ></div>
+                          </div>
+                          <small id="kitchen-time">0 hrs</small>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row g-0">
+                      <div class="col-8 p-1">
+                        <div class="location-tile living-room">
+                          <h5>Living Room</h5>
+                          <div
+                            class="activity-indicator"
+                            id="living-room-activity"
+                          >
+                            <div
+                              class="activity-level"
+                              style="height: 70%"
+                            ></div>
+                          </div>
+                          <small id="living-room-time">0 hrs</small>
+                        </div>
+                      </div>
+                      <div class="col-4 p-1">
+                        <div class="location-tile outside">
+                          <h5>Outside</h5>
+                          <div class="activity-indicator" id="outside-activity">
+                            <div
+                              class="activity-level"
+                              style="height: 10%"
+                            ></div>
+                          </div>
+                          <small id="outside-time">0 hrs</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="heatmap-legend d-flex justify-content-center mt-2"
+                  >
+                    <div class="d-flex align-items-center me-3">
+                      <div class="legend-color low-activity"></div>
+                      <small>Low</small>
+                    </div>
+                    <div class="d-flex align-items-center me-3">
+                      <div class="legend-color medium-activity"></div>
+                      <small>Medium</small>
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <div class="legend-color high-activity"></div>
+                      <small>High</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Activity Timeline -->
+          <div class="row mb-4">
+            <div class="col-12">
+              <div class="card border-success">
+                <div class="card-header bg-success text-white">
+                  <i class="bi bi-clock-history me-2"></i> Activity Timeline
+                </div>
+                <div class="card-body p-0">
+                  <div class="timeline-container">
+                    <div class="timeline">
+                      <div
+                        class="timeline-item"
+                        id="timeline-item-template"
+                        style="display: none"
+                      >
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                          <h3 class="timeline-title">Activity</h3>
+                          <p>Details about the activity</p>
+                        </div>
+                      </div>
+                      <!-- Timeline items will be added dynamically -->
+                      <div
+                        class="text-center my-4 text-muted"
+                        id="empty-timeline"
+                      >
+                        <i class="bi bi-calendar3 fs-1"></i>
+                        <p>No activity data available for today</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Safety Alerts -->
+          <div class="row mb-4">
+            <div class="col-12">
+              <div class="card border-danger">
+                <div
+                  class="card-header bg-danger text-white d-flex justify-content-between align-items-center"
+                >
+                  <div>
+                    <i class="bi bi-exclamation-triangle me-2"></i> Safety
+                    Alerts
+                  </div>
+                  <div>
+                    <button
+                      id="clearAlertsBtn"
+                      class="btn btn-sm btn-outline-light"
+                    >
+                      <i class="bi bi-x-circle"></i> Clear All
+                    </button>
+                  </div>
+                </div>
+                <div class="card-body p-0">
+                  <div
+                    class="list-group list-group-flush"
+                    id="safety-alerts-list"
+                  >
+                    <div class="list-group-item text-center text-muted">
+                      No safety alerts to display
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer bg-light">
+                  <div class="row text-center">
+                    <div class="col-4">
+                      <small
+                        ><span class="badge bg-danger me-1"></span>High
+                        Priority</small
+                      >
+                    </div>
+                    <div class="col-4">
+                      <small
+                        ><span class="badge bg-warning me-1"></span>Medium
+                        Priority</small
+                      >
+                    </div>
+                    <div class="col-4">
+                      <small
+                        ><span class="badge bg-info me-1"></span>Low
+                        Priority</small
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/socket.io/client-dist/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='js/safety.js') }}"></script>
+
+    <!-- Custom Styling for Activity Heat Map and Timeline -->
+    <style>
+      .heatmap-container {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 10px;
+        margin-bottom: 15px;
+      }
+
+      .location-tile {
+        background-color: white;
+        border-radius: 8px;
+        padding: 15px;
+        height: 150px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .location-tile h5 {
+        margin: 0;
+        font-size: 1rem;
+      }
+
+      .activity-indicator {
+        width: 50px;
+        height: 80px;
+        background-color: #e9ecef;
+        border-radius: 4px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .activity-level {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        background-color: #28a745;
+        transition: height 0.5s ease;
+      }
+
+      .bedroom .activity-level {
+        background-color: #fd7e14;
+      }
+      .bathroom .activity-level {
+        background-color: #20c997;
+      }
+      .kitchen .activity-level {
+        background-color: #ffc107;
+      }
+      .living-room .activity-level {
+        background-color: #0dcaf0;
+      }
+      .outside .activity-level {
+        background-color: #6f42c1;
+      }
+
+      .heatmap-legend {
+        margin-top: 10px;
+      }
+
+      .legend-color {
+        width: 20px;
+        height: 10px;
+        margin-right: 5px;
+      }
+
+      .low-activity {
+        background-color: #adb5bd;
+      }
+      .medium-activity {
+        background-color: #fd7e14;
+      }
+      .high-activity {
+        background-color: #dc3545;
+      }
+
+      /* Timeline Styling */
+      .timeline-container {
+        padding: 20px;
+        max-height: 400px;
+        overflow-y: auto;
+      }
+
+      .timeline {
+        position: relative;
+        padding: 20px 0;
+      }
+
+      .timeline::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 20px;
+        width: 2px;
+        background-color: #e9ecef;
+      }
+
+      .timeline-item {
+        position: relative;
+        margin-bottom: 30px;
+        padding-left: 45px;
+      }
+
+      .timeline-marker {
+        position: absolute;
+        left: 10px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: #0d6efd;
+        border: 3px solid white;
+        box-shadow: 0 0 0 2px #0d6efd;
+      }
+
+      .timeline-content {
+        background-color: white;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+
+      .timeline-title {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+
+      .timeline-content p {
+        margin: 10px 0 0;
+        color: #6c757d;
+      }
+
+      /* Safety Alert Styling */
+      #safety-alerts-list .list-group-item {
+        transition: all 0.3s ease;
+        border-left: 5px solid transparent;
+      }
+
+      #safety-alerts-list .list-group-item:hover {
+        transform: translateX(5px);
+      }
+
+      #safety-alerts-list .list-group-item-danger {
+        border-left-color: #dc3545;
+      }
+
+      #safety-alerts-list .list-group-item-warning {
+        border-left-color: #ffc107;
+      }
+
+      #safety-alerts-list .list-group-item-info {
+        border-left-color: #0dcaf0;
+      }
+
+      .card-footer .badge {
+        width: 15px;
+        height: 15px;
+        display: inline-block;
+        vertical-align: middle;
+      }
+
+      /* Animation for new alerts */
+      @keyframes alertPulse {
+        0% {
+          background-color: rgba(220, 53, 69, 0.1);
+        }
+        50% {
+          background-color: rgba(220, 53, 69, 0.2);
+        }
+        100% {
+          background-color: rgba(220, 53, 69, 0.1);
+        }
+      }
+
+      .new-alert {
+        animation: alertPulse 2s infinite;
+      }
+    </style>
+  </body>
+</html>

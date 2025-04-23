@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ app_name }} - Health Monitoring</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
+          <div class="position-sticky pt-3">
+            <div class="text-center mb-4">
+              <h2 class="text-white">{{ app_name }}</h2>
+              <p class="text-muted">Health Monitoring</p>
+            </div>
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link" href="/">
+                  <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="/health">
+                  <i class="bi bi-heart-pulse me-2"></i> Health Monitoring
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/safety">
+                  <i class="bi bi-shield-check me-2"></i> Safety Monitoring
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/reminders">
+                  <i class="bi bi-alarm me-2"></i> Reminders
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/settings">
+                  <i class="bi bi-gear me-2"></i> Settings
+                </a>
+              </li>
+            </ul>
+
+            <hr class="text-white" />
+          </div>
+        </div>
+
+        <!-- Main content -->
+        <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+          <div
+            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+          >
+            <h1 class="h2">Health Monitoring</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+              <div class="btn-group me-2">
+                <button
+                  id="system-status"
+                  class="btn btn-sm btn-outline-secondary"
+                >
+                  <span class="status-indicator"></span> System Status
+                </button>
+              </div>
+              <button
+                id="refreshHealthBtn"
+                class="btn btn-sm btn-outline-primary"
+              >
+                <i class="bi bi-arrow-clockwise"></i> Refresh Data
+              </button>
+            </div>
+          </div>
+
+          <!-- Health Metrics and Charts -->
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="card border-primary mb-4">
+                <div class="card-header bg-primary text-white">
+                  <i class="bi bi-heart-pulse me-2"></i> Vital Signs
+                </div>
+                <div class="card-body">
+                  <div id="vital-signs">
+                    <div class="mb-3">
+                      <label class="form-label">Heart Rate</label>
+                      <div class="progress">
+                        <div
+                          id="heart-rate-progress"
+                          class="progress-bar"
+                          role="progressbar"
+                          style="width: 0%"
+                        ></div>
+                      </div>
+                      <small id="heart-rate-value" class="text-muted"
+                        >Loading...</small
+                      >
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label">Blood Pressure</label>
+                      <div class="progress">
+                        <div
+                          id="blood-pressure-progress"
+                          class="progress-bar"
+                          role="progressbar"
+                          style="width: 0%"
+                        ></div>
+                      </div>
+                      <small id="blood-pressure-value" class="text-muted"
+                        >Loading...</small
+                      >
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label">Blood Glucose</label>
+                      <div class="progress">
+                        <div
+                          id="glucose-progress"
+                          class="progress-bar"
+                          role="progressbar"
+                          style="width: 0%"
+                        ></div>
+                      </div>
+                      <small id="glucose-value" class="text-muted"
+                        >Loading...</small
+                      >
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label">Oxygen Level</label>
+                      <div class="progress">
+                        <div
+                          id="oxygen-progress"
+                          class="progress-bar"
+                          role="progressbar"
+                          style="width: 0%"
+                        ></div>
+                      </div>
+                      <small id="oxygen-value" class="text-muted"
+                        >Loading...</small
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card border-info mb-4">
+                <div class="card-header bg-info text-white">
+                  <i class="bi bi-graph-up me-2"></i> Health Trends
+                </div>
+                <div class="card-body">
+                  <canvas id="healthChart" width="400" height="300"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Health Alerts -->
+          <div class="row mb-4">
+            <div class="col-12">
+              <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                  <i class="bi bi-exclamation-triangle me-2"></i> Health Alerts
+                </div>
+                <div class="card-body p-0">
+                  <div
+                    class="list-group list-group-flush"
+                    id="health-alerts-list"
+                  >
+                    <div class="list-group-item text-center text-muted">
+                      No health alerts to display
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Health Analysis Section -->
+          <div class="row">
+            <div class="col-12">
+              <div
+                class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+              >
+                <h2 class="h3">Health Data Analysis</h2>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                  <button
+                    id="refreshAnalysisBtn"
+                    class="btn btn-sm btn-outline-primary"
+                  >
+                    <i class="bi bi-arrow-clockwise"></i> Refresh Analysis
+                  </button>
+                </div>
+              </div>
+
+              <!-- Loading indicator -->
+              <div id="analysis-loading" class="text-center my-5">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">Loading health analysis data...</p>
+              </div>
+
+              <!-- Analysis content (hidden until loaded) -->
+              <div id="analysis-content" class="d-none">
+                <!-- Summary Statistics -->
+                <div class="row mb-4">
+                  <div class="col-md-12">
+                    <div class="card border-primary mb-4">
+                      <div class="card-header bg-primary text-white">
+                        <i class="bi bi-bar-chart-fill me-2"></i> Summary
+                        Statistics
+                      </div>
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col-md-3 mb-3">
+                            <div class="card h-100 bg-light">
+                              <div class="card-body text-center">
+                                <h5 class="card-title">Total Readings</h5>
+                                <h2 id="total-readings" class="display-4">0</h2>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-3 mb-3">
+                            <div class="card h-100 bg-light">
+                              <div class="card-body text-center">
+                                <h5 class="card-title">Alerts Triggered</h5>
+                                <h2 id="total-alerts" class="display-4">0</h2>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-3 mb-3">
+                            <div class="card h-100 bg-light">
+                              <div class="card-body text-center">
+                                <h5 class="card-title">Alert Rate</h5>
+                                <h2 id="alert-percentage" class="display-4">
+                                  0%
+                                </h2>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-3 mb-3">
+                            <div class="card h-100 bg-light">
+                              <div class="card-body text-center">
+                                <h5 class="card-title">Caregiver Notified</h5>
+                                <h2 id="notified-count" class="display-4">0</h2>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Alert Statistics -->
+                <div class="row mb-4">
+                  <div class="col-md-6">
+                    <div class="card border-danger h-100">
+                      <div class="card-header bg-danger text-white">
+                        <i class="bi bi-exclamation-triangle me-2"></i> Alert
+                        Statistics by Type
+                      </div>
+                      <div class="card-body">
+                        <canvas
+                          id="alertTypeChart"
+                          width="400"
+                          height="300"
+                        ></canvas>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="card border-warning h-100">
+                      <div class="card-header bg-warning text-dark">
+                        <i class="bi bi-list-check me-2"></i> Health Metrics
+                        Summary
+                      </div>
+                      <div class="card-body p-0">
+                        <div class="table-responsive">
+                          <table
+                            class="table table-hover table-borderless mb-0"
+                          >
+                            <thead class="table-light">
+                              <tr>
+                                <th>Metric</th>
+                                <th>Total Readings</th>
+                                <th>Threshold Violations</th>
+                                <th>Violation Rate</th>
+                              </tr>
+                            </thead>
+                            <tbody id="metrics-table-body">
+                              <!-- Will be populated by JavaScript -->
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/socket.io/client-dist/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='js/health.js') }}"></script>
+  </body>
+</html>

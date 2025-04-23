@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ app_name }} - Settings</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
+          <div class="position-sticky pt-3">
+            <div class="text-center mb-4">
+              <h2 class="text-white">{{ app_name }}</h2>
+              <p class="text-muted">Settings</p>
+            </div>
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link" href="/">
+                  <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/health">
+                  <i class="bi bi-heart-pulse me-2"></i> Health Monitoring
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/safety">
+                  <i class="bi bi-shield-check me-2"></i> Safety Monitoring
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/reminders">
+                  <i class="bi bi-alarm me-2"></i> Reminders
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="/settings">
+                  <i class="bi bi-gear me-2"></i> Settings
+                </a>
+              </li>
+            </ul>
+
+            <hr class="text-white" />
+          </div>
+        </div>
+
+        <!-- Main content -->
+        <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+          <div
+            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+          >
+            <h1 class="h2">Settings</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+              <div class="btn-group me-2">
+                <button
+                  id="system-status"
+                  class="btn btn-sm btn-outline-secondary"
+                >
+                  <span class="status-indicator"></span> System Status
+                </button>
+              </div>
+              <button id="saveSettingsBtn" class="btn btn-sm btn-primary">
+                <i class="bi bi-save me-1"></i> Save Settings
+              </button>
+            </div>
+          </div>
+
+          <!-- Settings content -->
+          <div class="row">
+            <div class="col-12 mb-4">
+              <!-- Nav tabs -->
+              <ul class="nav nav-tabs" id="settingsTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link active"
+                    id="system-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#system-settings"
+                    type="button"
+                    role="tab"
+                    aria-controls="system-settings"
+                    aria-selected="true"
+                  >
+                    <i class="bi bi-gear me-2"></i> System
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link"
+                    id="health-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#health-settings"
+                    type="button"
+                    role="tab"
+                    aria-controls="health-settings"
+                    aria-selected="false"
+                  >
+                    <i class="bi bi-heart-pulse me-2"></i> Health
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link"
+                    id="safety-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#safety-settings"
+                    type="button"
+                    role="tab"
+                    aria-controls="safety-settings"
+                    aria-selected="false"
+                  >
+                    <i class="bi bi-shield-check me-2"></i> Safety
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link"
+                    id="reminders-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#reminders-settings"
+                    type="button"
+                    role="tab"
+                    aria-controls="reminders-settings"
+                    aria-selected="false"
+                  >
+                    <i class="bi bi-alarm me-2"></i> Reminders
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link"
+                    id="notifications-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#notifications-settings"
+                    type="button"
+                    role="tab"
+                    aria-controls="notifications-settings"
+                    aria-selected="false"
+                  >
+                    <i class="bi bi-bell me-2"></i> Notifications
+                  </button>
+                </li>
+              </ul>
+
+              <!-- Tab content -->
+              <div
+                class="tab-content border border-top-0 rounded-bottom p-4"
+                id="settingsTabsContent"
+              >
+                <!-- System Settings -->
+                <div
+                  class="tab-pane fade show active"
+                  id="system-settings"
+                  role="tabpanel"
+                  aria-labelledby="system-tab"
+                >
+                  <h4 class="mb-4">System Settings</h4>
+
+                  <div class="form-check form-switch mb-3">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="enableSystemSwitch"
+                      checked
+                    />
+                    <label class="form-check-label" for="enableSystemSwitch"
+                      >Enable System</label
+                    >
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="systemLanguage" class="form-label"
+                      >System Language</label
+                    >
+                    <select class="form-select" id="systemLanguage">
+                      <option value="en">English</option>
+                      <option value="es">Spanish</option>
+                      <option value="fr">French</option>
+                    </select>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="voiceType" class="form-label">Voice Type</label>
+                    <select class="form-select" id="voiceType">
+                      <option value="female">Female</option>
+                      <option value="male">Male</option>
+                    </select>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="voiceVolume" class="form-label"
+                      >Voice Volume</label
+                    >
+                    <input
+                      type="range"
+                      class="form-range"
+                      min="0"
+                      max="100"
+                      value="75"
+                      id="voiceVolume"
+                    />
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="emergencyContact" class="form-label"
+                      >Emergency Contact</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="emergencyContact"
+                      placeholder="Enter emergency contact"
+                    />
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="caregiverContact" class="form-label"
+                      >Caregiver Contact</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="caregiverContact"
+                      placeholder="Enter caregiver contact"
+                    />
+                  </div>
+                </div>
+
+                <!-- Health Settings -->
+                <div
+                  class="tab-pane fade"
+                  id="health-settings"
+                  role="tabpanel"
+                  aria-labelledby="health-tab"
+                >
+                  <h4 class="mb-4">Health Monitoring Settings</h4>
+
+                  <div class="form-check form-switch mb-3">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="enableHealthMonitoring"
+                      checked
+                    />
+                    <label class="form-check-label" for="enableHealthMonitoring"
+                      >Enable Health Monitoring</label
+                    >
+                  </div>
+
+                  <h5 class="mt-4 mb-3">Alert Thresholds</h5>
+
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="heartRateMin" class="form-label"
+                        >Heart Rate (Min-Max)</label
+                      >
+                      <div class="input-group">
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="heartRateMin"
+                          value="60"
+                        />
+                        <span class="input-group-text">-</span>
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="heartRateMax"
+                          value="100"
+                        />
+                        <span class="input-group-text">BPM</span>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label for="bloodPressureMin" class="form-label"
+                        >Blood Pressure (Min-Max)</label
+                      >
+                      <div class="input-group">
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="systolicMin"
+                          value="90"
+                        />
+                        <span class="input-group-text">/</span>
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="diastolicMin"
+                          value="60"
+                        />
+                        <span class="input-group-text">-</span>
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="systolicMax"
+                          value="140"
+                        />
+                        <span class="input-group-text">/</span>
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="diastolicMax"
+                          value="90"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="temperatureMin" class="form-label"
+                        >Temperature (Min-Max)</label
+                      >
+                      <div class="input-group">
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="temperatureMin"
+                          value="36.0"
+                          step="0.1"
+                        />
+                        <span class="input-group-text">-</span>
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="temperatureMax"
+                          value="37.5"
+                          step="0.1"
+                        />
+                        <span class="input-group-text">°C</span>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label for="glucoseMin" class="form-label"
+                        >Blood Glucose (Min-Max)</label
+                      >
+                      <div class="input-group">
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="glucoseMin"
+                          value="70"
+                        />
+                        <span class="input-group-text">-</span>
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="glucoseMax"
+                          value="180"
+                        />
+                        <span class="input-group-text">mg/dL</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="oxygenMin" class="form-label"
+                        >Oxygen Level (Min)</label
+                      >
+                      <div class="input-group">
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="oxygenMin"
+                          value="95"
+                        />
+                        <span class="input-group-text">%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Safety Settings -->
+                <div
+                  class="tab-pane fade"
+                  id="safety-settings"
+                  role="tabpanel"
+                  aria-labelledby="safety-tab"
+                >
+                  <h4 class="mb-4">Safety Monitoring Settings</h4>
+
+                  <div class="form-check form-switch mb-3">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="enableSafetyMonitoring"
+                      checked
+                    />
+                    <label class="form-check-label" for="enableSafetyMonitoring"
+                      >Enable Safety Monitoring</label
+                    >
+                  </div>
+
+                  <div class="form-check form-switch mb-3">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="enableFallDetection"
+                      checked
+                    />
+                    <label class="form-check-label" for="enableFallDetection"
+                      >Enable Fall Detection</label
+                    >
+                  </div>
+
+                  <div class="form-check form-switch mb-3">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="enableLocationTracking"
+                      checked
+                    />
+                    <label class="form-check-label" for="enableLocationTracking"
+                      >Enable Location Tracking</label
+                    >
+                  </div>
+
+                  <div class="form-check form-switch mb-3">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="enableDoorMonitoring"
+                      checked
+                    />
+                    <label class="form-check-label" for="enableDoorMonitoring"
+                      >Enable Door Monitoring</label
+                    >
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="inactivityThreshold" class="form-label"
+                      >Inactivity Alert Threshold</label
+                    >
+                    <div class="input-group">
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="inactivityThreshold"
+                        value="4"
+                      />
+                      <span class="input-group-text">hours</span>
+                    </div>
+                    <div class="form-text">
+                      Trigger alert if no movement is detected for this duration
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Reminders Settings -->
+                <div
+                  class="tab-pane fade"
+                  id="reminders-settings"
+                  role="tabpanel"
+                  aria-labelledby="reminders-tab"
+                >
+                  <h4 class="mb-4">Reminders Settings</h4>
+
+                  <div class="form-check form-switch mb-3">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="enableReminders"
+                      checked
+                    />
+                    <label class="form-check-label" for="enableReminders"
+                      >Enable Reminders</label
+                    >
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="reminderLeadTime" class="form-label"
+                      >Reminder Lead Time</label
+                    >
+                    <div class="input-group">
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="reminderLeadTime"
+                        value="15"
+                      />
+                      <span class="input-group-text">minutes</span>
+                    </div>
+                    <div class="form-text">
+                      How early to notify before scheduled reminder time
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="reminderRepeatInterval" class="form-label"
+                      >Reminder Repeat Interval</label
+                    >
+                    <div class="input-group">
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="reminderRepeatInterval"
+                        value="5"
+                      />
+                      <span class="input-group-text">minutes</span>
+                    </div>
+                    <div class="form-text">
+                      How often to repeat unacknowledged reminders
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="reminderMaxRepeats" class="form-label"
+                      >Maximum Reminder Repeats</label
+                    >
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="reminderMaxRepeats"
+                      value="3"
+                    />
+                    <div class="form-text">
+                      Maximum number of times to repeat an unacknowledged
+                      reminder
+                    </div>
+                  </div>
+
+                  <div class="form-check form-switch mb-3">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="notifyCaregiverAfterMaxRepeats"
+                      checked
+                    />
+                    <label
+                      class="form-check-label"
+                      for="notifyCaregiverAfterMaxRepeats"
+                      >Notify Caregiver After Max Repeats</label
+                    >
+                  </div>
+                </div>
+
+                <!-- Notifications Settings -->
+                <div
+                  class="tab-pane fade"
+                  id="notifications-settings"
+                  role="tabpanel"
+                  aria-labelledby="notifications-tab"
+                >
+                  <h4 class="mb-4">Notifications Settings</h4>
+
+                  <div class="form-check form-switch mb-3">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="enableNotifications"
+                      checked
+                    />
+                    <label class="form-check-label" for="enableNotifications"
+                      >Enable Notifications</label
+                    >
+                  </div>
+
+                  <h5 class="mt-4 mb-3">Notification Methods</h5>
+
+                  <div class="form-check mb-2">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="enableVoiceNotifications"
+                      checked
+                    />
+                    <label
+                      class="form-check-label"
+                      for="enableVoiceNotifications"
+                      >Voice Notifications</label
+                    >
+                  </div>
+
+                  <div class="form-check mb-2">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="enableTextNotifications"
+                      checked
+                    />
+                    <label
+                      class="form-check-label"
+                      for="enableTextNotifications"
+                      >Text Notifications</label
+                    >
+                  </div>
+
+                  <div class="form-check mb-3">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="enableEmailNotifications"
+                    />
+                    <label
+                      class="form-check-label"
+                      for="enableEmailNotifications"
+                      >Email Notifications</label
+                    >
+                  </div>
+
+                  <h5 class="mt-4 mb-3">Notification Priority</h5>
+
+                  <div class="mb-3">
+                    <label for="healthNotificationPriority" class="form-label"
+                      >Health Alerts Priority</label
+                    >
+                    <select class="form-select" id="healthNotificationPriority">
+                      <option value="high">High</option>
+                      <option value="medium">Medium</option>
+                      <option value="low">Low</option>
+                    </select>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="safetyNotificationPriority" class="form-label"
+                      >Safety Alerts Priority</label
+                    >
+                    <select class="form-select" id="safetyNotificationPriority">
+                      <option value="high">High</option>
+                      <option value="medium">Medium</option>
+                      <option value="low">Low</option>
+                    </select>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="reminderNotificationPriority" class="form-label"
+                      >Reminders Priority</label
+                    >
+                    <select
+                      class="form-select"
+                      id="reminderNotificationPriority"
+                    >
+                      <option value="high">High</option>
+                      <option value="medium" selected>Medium</option>
+                      <option value="low">Low</option>
+                    </select>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="quietHoursStart" class="form-label"
+                      >Quiet Hours (Start-End)</label
+                    >
+                    <div class="input-group">
+                      <input
+                        type="time"
+                        class="form-control"
+                        id="quietHoursStart"
+                        value="22:00"
+                      />
+                      <span class="input-group-text">-</span>
+                      <input
+                        type="time"
+                        class="form-control"
+                        id="quietHoursEnd"
+                        value="07:00"
+                      />
+                    </div>
+                    <div class="form-text">
+                      Only high priority notifications during quiet hours
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/socket.io/client-dist/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='js/settings.js') }}"></script>
+  </body>
+</html>
