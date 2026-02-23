@@ -34,28 +34,6 @@ The system consists of the following components:
 - **Coordinator Agent**: Manages communication between agents and coordinates system-wide decisions.
 - **Web Application**: Flask-based web interface for monitoring and interacting with the system.
 
-## Screenshots
-
-- **Dashboard**
-
-![Dashboard](images/Dashboard.png)
-
-- **Health Monitoring**
-
-![Health Monitoring](images/Health_Monitoring.png)
-
-- **Safety Monitoring**
-
-![Safety Monitoring](images/Safety_Monitoring.png)
-
-- **Reminders**
-
-![Reminders](images/Reminders.png)
-
-- **Settings**
-
-![Settings](images/Settings.png)
-
 ## Requirements
 
 - Python 3.8+
@@ -113,14 +91,28 @@ This will start:
 1. The coordinator agent and all specialized agents
 2. The console interface for basic interaction
 
-### Dataset
+## User Interface
 
-The system uses three CSV files for data:
+- **Dashboard**
 
-- `health_monitoring.csv`: Contains health measurements like heart rate, blood pressure, etc.
-- `safety_monitoring.csv`: Contains safety data like falls, movement activity, etc.
-- `daily_reminder.csv`: Contains reminders for medications, appointments, etc.
+![Dashboard](images/Dashboard.png)
+
+- **Health Monitoring**
+
+![Health Monitoring](images/Health_Monitoring.png)
+
+- **Safety Monitoring**
+
+![Safety Monitoring](images/Safety_Monitoring.png)
+
+- **Reminders**
+
+![Reminders](images/Reminders.png)
+
+- **Settings**
+
+![Settings](images/Settings.png)
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+MIT License - See LICENSE file for details
